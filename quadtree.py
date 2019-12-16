@@ -89,3 +89,4 @@ def quadtree(data, counter, axis):
         quadtree(right_half, counter, 0)
 
 print()
+print()
