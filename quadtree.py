@@ -63,9 +63,9 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
 
 def quadtree(data, list, axis, final_list):
     if len(data) <= 50:
-        list.append(0)
+        list[0] = list[0] + 1
         for index in range(len(data)):
-            data[index]["properties"]["class_id"] = len(list)
+            data[index]["properties"]["class_id"] = list[0]
 
 
             final_list.append(data[index])

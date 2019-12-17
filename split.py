@@ -8,7 +8,7 @@ feat = data["features"]
 feat_pok = feat[:200]
 
 # features counter:
-c_list = []
+c_list = [0]
 # original ID for every group:
 cluster_id = 0
 # calling recurse function
