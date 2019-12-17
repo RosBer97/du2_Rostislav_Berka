@@ -3,7 +3,7 @@ def sort_coordinates(features, axis):
     features.sort(key = lambda p: p["geometry"]["coordinates"][axis])
     return features
 
-# acquire bounding points of rectangles (It may be useful in the future durink turtle drawing):
+# acquire bounding points of rectangles (It also may be useful in the future for turtle drawing):
 def acquire_bounding_points(list_of_feat):
     sort_x = sort_coordinates(list_of_feat,0)
     min_x = sort_x[0]["geometry"]["coordinates"][0]
@@ -25,7 +25,7 @@ def acquire_bounding_points(list_of_feat):
 
 
 # This recurse function get sorted list of dictionaries with coordinates and also geometrical middle point of rectangle/square.
-# This rectangle is "established" by mass of given point. Its necessary to split these points to two halves (geometrically, not
+# This rectangle is "established" by given points. Its necessary to split these points to two halves (geometrically, not
 # split the list to two halves), boundary is midd point of square/rectangle. This function gives index of last point (closest point
 # to the midd border) of the left part of mass of point. Principle is quite similar to binary search.
 def two_halves(sorted_list, mid_rectangle, left, right, axis):
@@ -55,10 +55,10 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
     if float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]) > mid_rectangle:
         right = index_mid_list
         return two_halves(sorted_list, mid_rectangle, left, right, axis)
-# Input is list of dictionaries of features, axis and "special" counter. This recurse function splitting given data
-# to 4 rectangles/squares using two_halves function defined above.
 
-def quadtree(data, list, axis, final_list):
+# Input is list of dictionaries of features, axis and "special" counter. This recurse function splits given data
+# to 4 rectangles/squares using two_halves function defined above.
+def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
     if len(data) <= 50:
         list[0] = list[0] + 1
         for index in range(len(data)):
@@ -68,18 +68,13 @@ def quadtree(data, list, axis, final_list):
 
     left = 0
     right = len(data) - 1
-    if axis == 0:
-        sort_coordinates(data,0)
-        mid_rectangle = (data[-1]["geometry"]["coordinates"][0] + data[0]["geometry"]["coordinates"][0]) / 2
-        # min = data[left]
-        # max = data[right]
-        index_geometrical_mid = two_halves(data, mid_rectangle, left, right,0)
-    if axis == 1:
-        sort_coordinates(data,1)
-        mid_rectangle = (data[-1]["geometry"]["coordinates"][1] + data[0]["geometry"]["coordinates"][1]) / 2
-        # min = data[left]
-        # max = data[right]
-        index_geometrical_mid = two_halves(data, mid_rectangle, left, right,1)
+
+    sort_coordinates(data,axis)
+    mid_rectangle = (data[-1]["geometry"]["coordinates"][axis] + data[0]["geometry"]["coordinates"][axis]) / 2
+    # min = data[left]
+    # max = data[right]
+    index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
+
     left_half = data[:index_geometrical_mid]
     right_half = data[index_geometrical_mid + 1:]
 
