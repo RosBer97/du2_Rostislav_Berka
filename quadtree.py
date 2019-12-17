@@ -3,9 +3,6 @@ def sort_coordinates(features, axis):
     features.sort(key = lambda p: p["geometry"]["coordinates"][axis])
     return features
 
-
-
-
 # acquire bounding points of rectangles (It may be useful in the future durink turtle drawing):
 def acquire_bounding_points(list_of_feat):
     sort_x = sort_coordinates(list_of_feat,0)
@@ -65,12 +62,8 @@ def quadtree(data, list, axis, final_list):
     if len(data) <= 50:
         list[0] = list[0] + 1
         for index in range(len(data)):
-            data[index]["properties"]["class_id"] = list[0]
-
-
+            data[index]["properties"]["cluster_id"] = list[0]
             final_list.append(data[index])
-            print(data[index])
-            print(len(final_list))
         return final_list
 
     left = 0
