@@ -8,16 +8,19 @@ feat = data["features"]
 feat_pok = feat[:200]
 
 # features counter:
-A = 0
+c_list = []
+# original ID for every group:
 cluster_id = 0
 # calling recurse function
-qtree_result = quadtree(feat_pok, A, 0)
+qtree_result = []
+final = quadtree(feat_pok, c_list, 0, qtree_result)
+
 
 gj_structure = {"type":"FeatureCollection"}
-gj_structure["features"] = qtree_result
+gj_structure["features"] = final
 
 
 # save geojson file
 with open("output.geojson", "w", encoding = "utf-8") as f:
-    json.dump(gj_structure, indent = 2)
+    json.dumps(gj_structure, indent = 2)
 
