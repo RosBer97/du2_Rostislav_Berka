@@ -69,7 +69,11 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
 # Input is list of dictionaries of features, axis and "special" counter. This recurse function splits given data
 # to 4 rectangles/squares using two_halves function defined above.
 def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
-    if len(data) <= 50:
+    # for case, if all of the points lies in one half of rectangle and another (this) half is empty:
+    if len(data) == 0:
+        print("empty list")
+    # for most of the cases – if list is not empty:
+    if (len(data) <= 50) and (len(data) > 0):
         list[0] = list[0] + 1
         for index in range(len(data)):
             data[index]["properties"]["cluster_id"] = list[0]
