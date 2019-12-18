@@ -66,39 +66,40 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
         right = index_mid_list
         return two_halves(sorted_list, mid_rectangle, left, right, axis)
 
-# Input is list of dictionaries of features, axis and "special" counter. This recurse function splits given data
-# to 4 rectangles/squares using two_halves function defined above.
+# Input is list of dictionaries of features, axis and "special" counter (list). This recurse function splits given data
+# to rectangles/squares using two_halves function defined above.
 def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
     # for case, if all of the points lies in one half of rectangle and another (this) half is empty:
     if len(data) == 0:
         print("empty list")
     # for most of the cases – if list is not empty:
-    if (len(data) <= 50) and (len(data) > 0):
-        list[0] = list[0] + 1
-        for index in range(len(data)):
-            data[index]["properties"]["cluster_id"] = list[0]
-            final_list.append(data[index])
-            print(len(final_list))
-        return final_list
+    else:
+        if (len(data) <= 50):
+            list[0] = list[0] + 1
+            for index in range(len(data)):
+                data[index]["properties"]["cluster_id"] = list[0]
+                final_list.append(data[index])
+                print(len(final_list))
+            return final_list
 
-    left = 0
-    right = len(data) - 1
-    if axis == 0:
-        mid_rectangle = (min_x + max_x) / 2
-    if axis == 1:
-        mid_rectangle = (min_y + max_y) / 2
+        left = 0
+        right = len(data) - 1
+        if axis == 0:
+            mid_rectangle = (min_x + max_x) / 2
+        if axis == 1:
+            mid_rectangle = (min_y + max_y) / 2
 
-    sort_coordinates(data, axis)
-    index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
+        sort_coordinates(data, axis)
+        index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
+        print(index_geometrical_mid)
+        left_half = data[:index_geometrical_mid]
+        right_half = data[index_geometrical_mid:]
 
-    left_half = data[:index_geometrical_mid]
-    right_half = data[index_geometrical_mid + 1:]
+        if axis == 0:
+            quadtree(left_half, list, 1, final_list, min_x, mid_rectangle, min_y, max_y)
+            quadtree(right_half, list, 1, final_list, mid_rectangle, max_x, min_y, max_y)
 
-    if axis == 0:
-        quadtree(left_half, list, 1, final_list, min_x, mid_rectangle, min_y, max_y)
-        quadtree(right_half, list, 1, final_list, mid_rectangle, max_x, min_y, max_y)
-
-    if axis == 1:
-        quadtree(left_half, list, 0, final_list, min_x, max_x, min_y, mid_rectangle)
-        quadtree(right_half, list, 0, final_list, min_x, max_x, mid_rectangle, max_y)
+        if axis == 1:
+            quadtree(left_half, list, 0, final_list, min_x, max_x, min_y, mid_rectangle)
+            quadtree(right_half, list, 0, final_list, min_x, max_x, mid_rectangle, max_y)
 

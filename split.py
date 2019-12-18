@@ -5,7 +5,7 @@ import json
 with open("input.geojson", "r", encoding = "utf-8") as f:
     data = json.load(f)
 feat = data["features"]
-feat_pok = feat[:3000] # just for testing of the algorithm
+feat_pok = feat[:200] # just for testing of the algorithm
 
 # features counter:
 c_list = [0]
@@ -22,7 +22,14 @@ print("vystup",len(qtree_result))
 gj_structure = {"type":"FeatureCollection"}
 gj_structure["features"] = qtree_result
 
-# save geojson file:
+# build GeoJson–vstup:
+gj_structure2 = {"type":"FeatureCollection"}
+gj_structure2["features"] = feat_pok
+
+# save output geojson file:
 with open("output.geojson", "w", encoding = "utf-8") as f:
     json.dump(gj_structure,f, indent = 2)
+# save input geojson file:
+with open("input_pouzity.geojson", "w", encoding = "utf-8") as f:
+    json.dump(gj_structure2,f, indent = 2)
 
