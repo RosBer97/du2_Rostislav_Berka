@@ -31,6 +31,7 @@ def acquire_bounding_points(list_of_feat):
 def two_halves(sorted_list, mid_rectangle, left, right, axis):
     index_mid_list = (left + right) // 2
     # just for check:
+    print("len of list",len(sorted_list))
     print("print left and right:", left, right)
     print("print index mid list:", index_mid_list, "value of this mid:", sorted_list[index_mid_list]["geometry"]["coordinates"][axis])
     print("print wanted mid_rectangle:", mid_rectangle)
@@ -46,8 +47,17 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
     if float(sorted_list[index_mid_list - 1]["geometry"]["coordinates"][axis]) < mid_rectangle < float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]):
         print("situation no 3, end of searching of mid")
         return (index_mid_list - 1)
+    # If all of the points lie only in one half of rectangular/square (mid_rectangle is bigger than all of the points)
+    if (right - left == 1) and float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]) < mid_rectangle:
+        print("situation no 4, end of searching of mid")
+        return right
+    # If all of the points lie only in one half of rectangular/square (mid_rectangle is smaller than all of the points)
+    if (left == 0 and right == 0) and float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]) > mid_rectangle:
+        print("situation no 5, end of searching of mid")
+        return left
 
-    # if one of these 3 conditions above is not satisfied, recurse:
+
+    # if one of these conditions above is not satisfied, recurse:
 
     if float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]) < mid_rectangle:
         left = index_mid_list
@@ -64,25 +74,27 @@ def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
         for index in range(len(data)):
             data[index]["properties"]["cluster_id"] = list[0]
             final_list.append(data[index])
+            print(len(final_list))
         return final_list
 
     left = 0
     right = len(data) - 1
+    if axis == 0:
+        mid_rectangle = (min_x + max_x) / 2
+    if axis == 1:
+        mid_rectangle = (min_y + max_y) / 2
 
-    sort_coordinates(data,axis)
-    mid_rectangle = (data[-1]["geometry"]["coordinates"][axis] + data[0]["geometry"]["coordinates"][axis]) / 2
-    # min = data[left]
-    # max = data[right]
+    sort_coordinates(data, axis)
     index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
 
     left_half = data[:index_geometrical_mid]
     right_half = data[index_geometrical_mid + 1:]
 
     if axis == 0:
-        quadtree(left_half, list, 1, final_list)
-        quadtree(right_half, list, 1, final_list)
+        quadtree(left_half, list, 1, final_list, min_x, mid_rectangle, min_y, max_y)
+        quadtree(right_half, list, 1, final_list, mid_rectangle, max_x, min_y, max_y)
 
     if axis == 1:
-        quadtree(left_half, list, 0, final_list)
-        quadtree(right_half, list, 0, final_list)
+        quadtree(left_half, list, 0, final_list, min_x, max_x, min_y, mid_rectangle)
+        quadtree(right_half, list, 0, final_list, min_x, max_x, mid_rectangle, max_y)
 
