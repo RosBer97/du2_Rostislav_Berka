@@ -1,4 +1,4 @@
-# sort features acording to x - longitude (0) or y - latitude (1)
+# sort list of features acording to x - longitude (0) or y - latitude (1)
 def sort_coordinates(features, axis):
     features.sort(key = lambda p: p["geometry"]["coordinates"][axis])
     return features
@@ -15,14 +15,11 @@ def acquire_bounding_points(list_of_feat):
 
     return (min_x, max_x, min_y, max_y)
 
-    # build rectangle (define area of interest) from first and last coordinates in sorted list---points of rectangle:
+    # build rectangle/square (define area of interest) from first and last coordinates in sorted list---points of rectangle:
         #top_left = (min_x, max_y)
         #top_right = (max_x, max_y)
         #bottom_left = (min_x, min_y)
         #bottom_right = (max_x, min_y)
-        #print(top_left,top_right,bottom_left,bottom_right)
-
-
 
 # This recurse function get sorted list of dictionaries with coordinates and also geometrical middle point of rectangle/square.
 # This rectangle is "established" by given points. Its necessary to split these points to two halves (geometrically, not
@@ -57,7 +54,7 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
         return left
 
 
-    # if one of these conditions above is not satisfied, recurse:
+    # if one of those conditions above is not satisfied, recurse:
 
     if float(sorted_list[index_mid_list]["geometry"]["coordinates"][axis]) < mid_rectangle:
         left = index_mid_list
@@ -92,8 +89,10 @@ def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
         sort_coordinates(data, axis)
         index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
         print(index_geometrical_mid)
-        left_half = data[:index_geometrical_mid]
-        right_half = data[index_geometrical_mid:]
+        # Point with index_geometrical_mid is last (closest to the geometrical midd of rectangle/square)
+        # in the left half of the rectangle/square. So, this point belongs to left_half, thats why there is + 1.
+        left_half = data[:index_geometrical_mid + 1]
+        right_half = data[index_geometrical_mid + 1:]
 
         if axis == 0:
             quadtree(left_half, list, 1, final_list, min_x, mid_rectangle, min_y, max_y)

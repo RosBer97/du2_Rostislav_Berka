@@ -2,34 +2,27 @@ from quadtree import quadtree, acquire_bounding_points
 import json
 
 # load GeoJson file:
-with open("input.geojson", "r", encoding = "utf-8") as f:
+with open("input_DMR5G.geojson", "r", encoding = "utf-8") as f:
     data = json.load(f)
+# loading features to list feat
 feat = data["features"]
-feat_pok = feat[:200] # just for testing of the algorithm
+feat_pokus = feat[:50000] # just for testing purposes, for reducing amount of data through slice index,
+# for more comfortable work and visualisation in QGIS during developing
 
 # features counter:
 c_list = [0]
 # acquire bounding points of rectangle/square set up by given points:
-b_points = acquire_bounding_points(feat_pok)
+b_points = acquire_bounding_points(feat_pokus)
 # calling recurse function
-qtree_result = []
-quadtree(feat_pok, c_list, 0, qtree_result, b_points[0], b_points[1], b_points[2], b_points[3])
-# odhalen problém s mizejícími body při skončení quadtree, z cca16 500 jich zbyde 16 000.
-print("vstup",len(feat_pok))
-print("vystup",len(qtree_result))
+qtree_result = [] # final list with cluster_id
+quadtree(feat_pokus, c_list, 0, qtree_result, b_points[0], b_points[1], b_points[2], b_points[3])
 
 # build GeoJson:
 gj_structure = {"type":"FeatureCollection"}
 gj_structure["features"] = qtree_result
 
-# build GeoJson–vstup:
-gj_structure2 = {"type":"FeatureCollection"}
-gj_structure2["features"] = feat_pok
-
 # save output geojson file:
 with open("output.geojson", "w", encoding = "utf-8") as f:
     json.dump(gj_structure,f, indent = 2)
-# save input geojson file:
-with open("input_pouzity.geojson", "w", encoding = "utf-8") as f:
-    json.dump(gj_structure2,f, indent = 2)
+
 
