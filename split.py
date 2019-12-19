@@ -2,11 +2,11 @@ from quadtree import quadtree, acquire_bounding_points
 import json
 
 # load GeoJson file:
-with open("input_DMR5G.geojson", "r", encoding = "utf-8") as f:
+with open("input_Pan_Kyncl_Zastavky.geojson", "r", encoding = "utf-8") as f:
     data = json.load(f)
 # loading features to list feat
 feat = data["features"]
-feat_pokus = feat[:50000] # just for testing purposes, for reducing amount of data through slice index,
+feat_pokus = feat[:] # just for testing purposes, for reducing amount of data through slice index,
 # for more comfortable work and visualisation in QGIS during developing
 
 # features counter:
@@ -25,5 +25,3 @@ gj_structure["features"] = qtree_result
 # save output geojson file:
 with open("output.geojson", "w", encoding = "utf-8") as f:
     json.dump(gj_structure,f, indent = 2)
-
-
