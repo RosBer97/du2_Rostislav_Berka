@@ -15,7 +15,8 @@ c_list = [0]
 b_points = acquire_bounding_points(feat_pokus)
 # calling recurse function
 qtree_result = [] # final list with cluster_id
-quadtree(feat_pokus, c_list, 0, qtree_result, b_points[0], b_points[1], b_points[2], b_points[3])
+#input is list of given features, features counter, axis (0 or 1), list of outputfeatures, and bounding points)
+quadtree(feat_pokus, c_list, qtree_result, b_points[0], b_points[1], b_points[2], b_points[3])
 
 # build GeoJson:
 gj_structure = {"type":"FeatureCollection"}

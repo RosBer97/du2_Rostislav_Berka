@@ -65,7 +65,7 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
 
 # Input is list of dictionaries of features, axis and "special" counter (list). This recurse function splits given data
 # to rectangles/squares using two_halves function defined above.
-def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
+def quadtree(data, list, final_list, min_x, max_x, min_y, max_y):
     # for case, if all of the points lies in one half of rectangle and another (this) half is empty:
     if len(data) == 0:
         print("empty list")
@@ -81,24 +81,39 @@ def quadtree(data, list, axis, final_list, min_x, max_x, min_y, max_y):
 
         left = 0
         right = len(data) - 1
-        if axis == 0:
-            mid_rectangle = (min_x + max_x) / 2
-        if axis == 1:
-            mid_rectangle = (min_y + max_y) / 2
 
-        sort_coordinates(data, axis)
-        index_geometrical_mid = two_halves(data, mid_rectangle, left, right,axis)
-        print(index_geometrical_mid)
+        mid_rectangle_x = (min_x + max_x) / 2
+        mid_rectangle_y = (min_y + max_y) / 2
+
+        sort_coordinates(data, 0)
+        index_geometrical_mid_x = two_halves(data, mid_rectangle_x, left, right,0)
+        print(index_geometrical_mid_x)
         # Point with index_geometrical_mid is last (closest to the geometrical midd of rectangle/square)
         # in the left half of the rectangle/square. So, this point belongs to left_half, thats why there is + 1.
-        left_half = data[:index_geometrical_mid + 1]
-        right_half = data[index_geometrical_mid + 1:]
+        left_half_x = data[:index_geometrical_mid_x + 1]
+        right_half_x = data[index_geometrical_mid_x + 1:]
+        # now there are 2 halves sorted according to x, its necessary to sort them according to y.
+        sort_coordinates(left_half_x, 1)
+        sort_coordinates(right_half_x, 1)
+        # right indexes of these two halves:
+        right_left_halve = len(left_half_x) - 1
+        right_right_halve = len(right_half_x) - 1
+        # Finding point closest to the geometrical mid of rectangles/squares.
+        index_geometrical_mid_y_left = two_halves(left_half_x, mid_rectangle_y, left, right_left_halve, 1)
+        index_geometrical_mid_y_right = two_halves(right_half_x, mid_rectangle_y, left, right_right_halve, 1)
 
-        if axis == 0:
-            quadtree(left_half, list, 1, final_list, min_x, mid_rectangle, min_y, max_y)
-            quadtree(right_half, list, 1, final_list, mid_rectangle, max_x, min_y, max_y)
+        # building 4 rectangles/squares:
 
-        if axis == 1:
-            quadtree(left_half, list, 0, final_list, min_x, max_x, min_y, mid_rectangle)
-            quadtree(right_half, list, 0, final_list, min_x, max_x, mid_rectangle, max_y)
+        left_upper = left_half_x[index_geometrical_mid_y_left + 1:]
+        left_bottom = left_half_x[:index_geometrical_mid_y_left + 1]
+
+        right_upper = right_half_x[index_geometrical_mid_y_right + 1:]
+        right_bottom = right_half_x[:index_geometrical_mid_y_right + 1]
+
+        # recurse on this 4 rectangles/squares:
+        quadtree(left_upper, list, final_list, min_x, mid_rectangle_x, mid_rectangle_y, max_y)
+        quadtree(left_bottom, list, final_list, min_x, mid_rectangle_x, min_y, mid_rectangle_y)
+
+        quadtree(right_upper, list, final_list, mid_rectangle_x, max_x, mid_rectangle_y, max_y)
+        quadtree(right_bottom, list, final_list, mid_rectangle_x, max_x, min_y, mid_rectangle_y)
 
