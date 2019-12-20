@@ -10,19 +10,20 @@ feat_pokus = feat[:] # just for testing purposes, for reducing amount of data th
 # for more comfortable work and visualisation in QGIS during developing, it will be deleted in
 # final version
 
-# features counter:
-c_list = [0]
+# It was quite difficult to invent how to add original cluster ID to all clusters. This list called counter_list
+# is for this purpose. It has only one element – zero. It is sent to the quadtree function. In this function
+# + 1 is added in every step of end condition (less than 50 elements in the list). So, at the end of function quadtree
+# its not zero, it is bigger number and it says how many clusters are in given data.
+counter_list = [0]
 # acquire bounding points of rectangle/square set up by given points:
 b_points = acquire_bounding_points(feat_pokus)
-# final list with cluster_id
-qtree_result = []
 # calling recurse function
 #input is list of given features, features counter, list of output features, and bounding points)
-quadtree(feat_pokus, c_list, qtree_result, b_points[0], b_points[1], b_points[2], b_points[3])
+quadtree(feat_pokus, counter_list, b_points[0], b_points[1], b_points[2], b_points[3])
 
 # build GeoJson:
 gj_structure = {"type":"FeatureCollection"}
-gj_structure["features"] = qtree_result
+gj_structure["features"] = feat_pokus
 
 # save output geojson file:
 with open("output.geojson", "w", encoding = "utf-8") as f:

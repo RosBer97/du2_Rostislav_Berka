@@ -76,7 +76,7 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
 
 # Input is list of dictionaries of features, "special" counter (list) and bounding points of rectangle/square. This recurse function splits given data
 # to 4 rectangles/squares using two_halves function defined above.
-def quadtree(data, list, final_list, min_x, max_x, min_y, max_y):
+def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y):
     # for case, if all of the points lies in one half of rectangle and another (this) half is empty:
     if len(data) == 0:
         print("empty list")
@@ -84,12 +84,15 @@ def quadtree(data, list, final_list, min_x, max_x, min_y, max_y):
     else:
         # end condition for recurse function:
         if (len(data) < 50):
-            list[0] = list[0] + 1 # features counter
+            # cluster counter – its a list with one element – its index is 0 and value of this element is also 0 (at the beginning
+            # of the script). If end condition of recursion is satisfied ---> add + 1 to the value in the list cluster counter.
+            # So, the value is bigger and bigger and at the end of the script it says, how many cluster are made.
+            cluster_counter[0] = cluster_counter[0] + 1
             for index in range(len(data)):
-                data[index]["properties"]["cluster_id"] = list[0] # add cluster id
-                final_list.append(data[index])
-                print(len(final_list))
-            return final_list
+                data[index]["properties"]["cluster_id"] = cluster_counter[0] # add cluster id, which is original for every cluster,
+                # thanks to the procces of adding + 1, 3 lines above
+                print(cluster_counter[0])
+            return data
 
         left = 0
         right = len(data) - 1
@@ -123,9 +126,9 @@ def quadtree(data, list, final_list, min_x, max_x, min_y, max_y):
         right_bottom = right_half_x[: index_geometrical_mid_y_right]
 
         # recurse on these 4 rectangles/squares:
-        quadtree(left_upper, list, final_list, min_x, mid_rectangle_x, mid_rectangle_y, max_y)
-        quadtree(left_bottom, list, final_list, min_x, mid_rectangle_x, min_y, mid_rectangle_y)
+        quadtree(left_upper, cluster_counter, min_x, mid_rectangle_x, mid_rectangle_y, max_y)
+        quadtree(left_bottom, cluster_counter, min_x, mid_rectangle_x, min_y, mid_rectangle_y)
 
-        quadtree(right_upper, list, final_list, mid_rectangle_x, max_x, mid_rectangle_y, max_y)
-        quadtree(right_bottom, list, final_list, mid_rectangle_x, max_x, min_y, mid_rectangle_y)
+        quadtree(right_upper, cluster_counter, mid_rectangle_x, max_x, mid_rectangle_y, max_y)
+        quadtree(right_bottom, cluster_counter, mid_rectangle_x, max_x, min_y, mid_rectangle_y)
 
