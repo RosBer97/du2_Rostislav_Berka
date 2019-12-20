@@ -5,13 +5,11 @@ def sort_coordinates(features, axis):
 
 # acquire bounding points of rectangles (It also may be useful in the future for turtle drawing):
 def acquire_bounding_points(list_of_feat):
-    sort_x = sort_coordinates(list_of_feat,0)
-    min_x = sort_x[0]["geometry"]["coordinates"][0]
-    max_x = sort_x[-1]["geometry"]["coordinates"][0]
+    min_x = min(list_of_feat, key=lambda p: p["geometry"]["coordinates"][0])["geometry"]["coordinates"][0]
+    max_x = max(list_of_feat, key=lambda p: p["geometry"]["coordinates"][0])["geometry"]["coordinates"][0]
 
-    sort_y = sort_coordinates(list_of_feat,1)
-    min_y = sort_y[0]["geometry"]["coordinates"][1]
-    max_y = sort_y[-1]["geometry"]["coordinates"][1]
+    min_y = min(list_of_feat, key=lambda p: p["geometry"]["coordinates"][1])["geometry"]["coordinates"][1]
+    max_y = max(list_of_feat, key=lambda p: p["geometry"]["coordinates"][1])["geometry"]["coordinates"][1]
 
     return (min_x, max_x, min_y, max_y)
 
