@@ -86,9 +86,9 @@ def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y):
             # of the script). If end condition of recursion is satisfied ---> add + 1 to the value in the list cluster counter.
             # So, the value is bigger and bigger and at the end of the script it says, how many cluster are made.
             cluster_counter[0] = cluster_counter[0] + 1
-            for index in range(len(data)):
-                data[index]["properties"]["cluster_id"] = cluster_counter[0] # add cluster id, which is original for every cluster,
-                # thanks to the procces of adding + 1, 3 lines above
+            for dictionary in data:
+                dictionary["properties"]["cluster_id"] = cluster_counter[0] # add cluster id, which is original for every cluster,
+                # thanks to the procces of adding + 1
                 print(cluster_counter[0])
             return data
 
