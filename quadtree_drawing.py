@@ -1,5 +1,6 @@
 from turtle import forward, left, right, exitonclick, penup, pendown, \
-speed, setup, setworldcoordinates, goto, dot, window_height, window_width
+speed, setup, setworldcoordinates, goto, dot, window_height, window_width, \
+tracer
 
 # to work with smaller and "nicer" numbers recalculate every coordinate relatively to minimum coordinate
 # and multiply it with 1000000. ---> turtle cant draw point or distance with more than 2 decimal numbers.
@@ -34,6 +35,7 @@ def draw_1_point(x_coor, y_coor):
     dot()
 # draw boundary box of data. Its used in recurse function quadtree.
 def draw_b_box(b_box_min_x, b_box_max_x, b_box_min_y, b_box_max_y, configuration_tuple):
+    tracer(300, 1)
     speed("fastest")
     x_max_modified = modify_coor(b_box_max_x, configuration_tuple[5])
     x_min_modified = modify_coor(b_box_min_x, configuration_tuple[5])
@@ -64,7 +66,7 @@ def draw_points(data, global_min_x, global_max_x, global_min_y, global_max_y):
     print("screen size:", window_width(), window_height())
     # speed is set to fastest, but its not still enough
     speed("fastest")
-
+    tracer(10000, 1)
     # height and width of window on user´s computer
     screen_max_x = window_width()
     screen_max_y = window_height()

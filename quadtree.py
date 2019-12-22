@@ -140,4 +140,3 @@ def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y, configuration_tu
 
         quadtree(right_upper, cluster_counter, mid_rectangle_x, max_x, mid_rectangle_y, max_y, configuration_tuple)
         quadtree(right_bottom, cluster_counter, mid_rectangle_x, max_x, min_y, mid_rectangle_y, configuration_tuple)
-

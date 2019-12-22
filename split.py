@@ -1,5 +1,5 @@
 from turtle import exitonclick
-from quadtree_drawing import draw_points
+from quadtree_drawing import draw_points, draw_b_box
 from quadtree import quadtree, acquire_bounding_points
 import json
 
@@ -16,7 +16,7 @@ if len(feat_reduced) < 2:
     print("Too small list of points, list should have at least 2 points – features")
 
 else:
-
+    config_tuple = ()
     # It was quite difficult to invent how to add original cluster ID to all clusters. This list called counter_list
     # is for this purpose. It has only one element – zero. It is sent to the quadtree function. In this function
     # + 1 is added in every step of end condition (less than 50 elements in the list). So, at the end of function quadtree
@@ -27,13 +27,12 @@ else:
 
     ################ TURTLE DRAWING #################  turtle draw all points in list feat_reduced
     config_tuple = draw_points(feat_reduced, b_points[0], b_points[1], b_points[2], b_points[3])
+    draw_b_box(b_points[0], b_points[1], b_points[2], b_points[3], config_tuple)
 
     # calling recurse function
     #input is list of given features, features counter, list of output features, bounding points and special configuration tuple)
     quadtree(feat_reduced, counter_list, b_points[0], b_points[1], b_points[2], b_points[3], config_tuple)
 
-    # close turtle drawing window
-    exitonclick()
 
     # build GeoJson:
     gj_structure = {"type":"FeatureCollection"}
@@ -42,3 +41,6 @@ else:
     # save output geojson file:
     with open("output.geojson", "w", encoding = "utf-8") as f:
         json.dump(gj_structure,f, indent = 2)
+
+    # close turtle drawing window
+    exitonclick()
