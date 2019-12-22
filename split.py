@@ -9,8 +9,8 @@ with open("input.geojson", "r", encoding = "utf-8") as f:
 # loading features to list feat
 feat = data["features"]
 feat_reduced = feat[:] # just for testing purposes, for reducing amount of data through slice index,
-# for more comfortable work and visualisation in QGIS during developing, it will be deleted in
-# final version
+# for more comfortable work and visualisation in QGIS during developing, it is also HIGHLY RECOMMENDED
+# to reduce amount of data because of turtle drawing.
 
 if len(feat_reduced) < 2:
     print("Too small list of points, list should have at least 2 points – features")
@@ -29,10 +29,10 @@ else:
     config_tuple = draw_points(feat_reduced, b_points[0], b_points[1], b_points[2], b_points[3])
 
     # calling recurse function
-    #input is list of given features, features counter, list of output features, and bounding points)
+    #input is list of given features, features counter, list of output features, bounding points and special configuration tuple)
     quadtree(feat_reduced, counter_list, b_points[0], b_points[1], b_points[2], b_points[3], config_tuple)
 
-    # stop turtle drawing
+    # close turtle drawing window
     exitonclick()
 
     # build GeoJson:

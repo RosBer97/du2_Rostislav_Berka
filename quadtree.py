@@ -5,7 +5,7 @@ def sort_coordinates(features, axis):
     features.sort(key = lambda p: p["geometry"]["coordinates"][axis])
     return features
 
-# acquire bounding points of rectangles (It also may be useful in the future for turtle drawing):
+# acquire bounding points of rectangles:
 def acquire_bounding_points(list_of_feat):
     min_x = min(list_of_feat, key=lambda p: p["geometry"]["coordinates"][0])["geometry"]["coordinates"][0]
     max_x = max(list_of_feat, key=lambda p: p["geometry"]["coordinates"][0])["geometry"]["coordinates"][0]
@@ -74,8 +74,8 @@ def two_halves(sorted_list, mid_rectangle, left, right, axis):
             right = index_mid_list
             return two_halves(sorted_list, mid_rectangle, left, right, axis)
 
-# Input is list of dictionaries of features, "special" counter (list) and bounding points of rectangle/square. This recurse function splits given data
-# to 4 rectangles/squares using two_halves function defined above.
+# Input is list of dictionaries of features, "special" counter (list), bounding points of rectangle/square and configuration_tuple
+# for turtle drawing. This recurse function splits given data to 4 rectangles/squares using two_halves function defined above.
 def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y, configuration_tuple):
     # for case, if all of the points lies in one half of rectangle and another (this) half is empty:
     if len(data) == 0:
@@ -96,7 +96,7 @@ def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y, configuration_tu
 
             # cluster counter – its a list with one element – its index is 0 and value of this element is also 0 (at the beginning
             # of the script). If end condition of recursion is satisfied ---> add + 1 to the value in the list cluster counter.
-            # So, the value is bigger and bigger and at the end of the script it says, how many cluster are made.
+            # So, the value is bigger and bigger and at the end of the script it says, how many clusters are made.
             cluster_counter[0] = cluster_counter[0] + 1
             for dic in data:
                 dic["properties"]["cluster_id"] = cluster_counter[0] # add cluster id, which is original for every cluster,
@@ -112,7 +112,6 @@ def quadtree(data, cluster_counter, min_x, max_x, min_y, max_y, configuration_tu
         # start of splitting list to 2 halves according to x axis
         sort_coordinates(data, 0)
         index_geometrical_mid_x = two_halves(data, mid_rectangle_x, left, right, 0)
-        print(index_geometrical_mid_x)
         # Point with index_geometrical_mid is first (closest to the geometrical midd of rectangle/square)
         # in the right half of the rectangle/square. So, this point belongs to right_half.
         left_half_x = data[: index_geometrical_mid_x ]
