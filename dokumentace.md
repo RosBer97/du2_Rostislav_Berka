@@ -80,7 +80,7 @@ vzhledem k nejmenší souřadnici (x nebo y), proto aby se počítalo s menším
 s nejmenší x i y souřadnicí vykreslen v levém dolním rohu (zde je počátek souř. sys. tak ja bylo nastaveno ve funkci setworldcoordinates).
 Dále jsou též souřadnice násobeny 10 000 000. Bylo totiž zjištěno, že želva pracuje pouze s 2 desetinnými místy.
 Např. při zadání goto(14.46597945, 50.65468762), želva při dotazu na pozici vypisuje pouze (14.47,50.65) s pomocí funkce position. Je tedy lepší
-nespoléhat na desetinný místa. Následně jsou souřadnice opět přepočítány ve funkci ratio_multiplier tak, aby bod s maximální
+nespoléhat na desetinná místa. Následně jsou souřadnice opět přepočítány ve funkci ratio_multiplier tak, aby bod s maximální
 x i y souřadnicí byl vykreslen do horního pravého rohu a naopak bod snejnižšími hodnotami souřadnic do levého spodního (počátek
 souřadnicového systému). Souřadnice jsou v podstatě převedeny do pixelového souřadnicového systému.
 Toto se děje s ohledem na „orientaci“ dat (data orientation landscape nebo portrait). Poslední funkcí v modulu je draw_b_box.
